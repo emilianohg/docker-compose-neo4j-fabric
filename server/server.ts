@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import productRoutes from './routes/productRoutes';
+import companyRoutes from './routes/companyRoutes';
+import { database }  from './database/database'
 
 class Server {
 
@@ -13,7 +14,7 @@ class Server {
     }
 
     config():void{
-        this.app.set('port',process.env.PORT || 8080);
+        this.app.set('port',process.env.PORT || 8300);
       
         this.app.use(cors());
         this.app.use(express.json());
@@ -22,7 +23,7 @@ class Server {
     }
 
     routes():void{
-      this.app.use('/api/products',productRoutes);
+      this.app.use('/api/companies',companyRoutes);
 
     }
     

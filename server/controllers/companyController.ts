@@ -2,10 +2,17 @@ import { Request,Response } from 'express';
 
 
 //endpoint
-class ProductController {
+class CompanyController {
 
   public async list (req:any,res:Response) {
-      
+
+      try {
+
+        // const companies = 
+        // const res  = await session.run(" MATCH (c:Company),(s:State) WHERE c.companyID = 1 AND s.id = 59 CREATE (c)-[:PART_OF]->(s) RETURN c, s ");
+      } catch (error) {
+        
+      }
 
 }
 
@@ -33,4 +40,4 @@ public async create (req: Request, res:Response) {
 
 }
 }
-export const productController = new ProductController();
+export const companyController = new CompanyController();
