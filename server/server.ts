@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import companyRoutes from './routes/companyRoutes';
-import { database }  from './database/database'
+import {database}  from './database/database'
 
 class Server {
 
@@ -11,6 +11,7 @@ class Server {
         this.app = express();
         this.config();
         this.routes();
+        this.connectDB();
     }
 
     config():void{
@@ -24,9 +25,11 @@ class Server {
 
     routes():void{
       this.app.use('/api/companies',companyRoutes);
-
     }
-    
+
+    async connectDB():Promise<void>{
+      database.authenticate()
+    }
     start():void{
       this.app.listen(this.app.get('port'), () => {
           console.log('Server on port',this.app.get('port'))
