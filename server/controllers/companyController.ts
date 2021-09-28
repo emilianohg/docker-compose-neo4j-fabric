@@ -8,7 +8,7 @@ class CompanyController {
 
     try {
       const companies = database.session.run(`MATCH (c:Company)return c`);
-      const nodes = (await companies).records[0];
+      const nodes = (await companies).records;
       
       res.json({ 
       ok:true,
@@ -24,6 +24,27 @@ class CompanyController {
   }
 
   public async create(req: Request, res: Response) {
+       const { body } = req;
+
+
+
+        const query = `CREATE (empresa: Company{companyID:apoc.create.uuid(), name: "${body.name}", address: "${body.address}", lat: "${body.lat}", lon:${body.lon}});`
+
+        await database.session.run(query).then( _ => {
+
+          console.log(_);
+
+          res.status(200).json({ 
+            ok:true,
+            msg:"Empresa creada con exito."
+            })
+        }).catch( err  => {
+            res.status(500).json({
+              ok:false,
+              msg:err
+            })
+        })
+
 
 
   }
