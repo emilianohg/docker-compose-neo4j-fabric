@@ -26,7 +26,9 @@ class CompanyController {
   public async create(req: Request, res: Response) {
        const { body } = req;
 
-        const query = `CREATE (empresa: Company{CompanyID:apoc.create.uuid(), name: "${body.name}", address: "${body.address}", lat: "${body.lat}", lon:${body.lon}});`
+
+        
+        const query = `CALL { CREATE (c:Company{companyID:apoc.create.uuid(),name: "${body.name}", address: "${body.address}", lat: "${body.lat}", lon:${body.lon}}) RETURN c } CREATE (c)-[r:PART_OF]->(s:State{id:"${body.stateid}"})`
 
         await database.session.run(query).then( _ => {
 
@@ -42,6 +44,8 @@ class CompanyController {
               msg:err
             })
         })
+
+
 
 
 
