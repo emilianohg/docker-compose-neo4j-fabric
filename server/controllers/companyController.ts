@@ -60,7 +60,25 @@ class CompanyController {
 
 
   public async delete(req: Request, res: Response) {
+    const { id } = req.params;
 
+    const query = `MATCH (c:Company{companyID:"${id}"})-[r:PART_OF]->() DELETE c,r;`
+
+    await database.session.run(query).then( _ => {
+
+      console.log( _ );
+
+      
+      res.status(200).json({ 
+        ok:true,
+        msg:"Empresa elimianda con exito."
+        })
+    }).catch( err  => {
+        res.status(500).json({
+          ok:false,
+          msg:err
+        })
+    })
 
   }
 
