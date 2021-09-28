@@ -14,6 +14,8 @@ class CompanyRoutes {
     config(): void {
         this.router.get('/',companyController.list);
         this.router.post('/create',companyController.create);
+        this.router.put('/update/:id',companyController.update);
+
         
         // this.router.get('/:id',productController.getOne);
         // this.router.post('/',productController.create);
