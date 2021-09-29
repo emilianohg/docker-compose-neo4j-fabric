@@ -1,0 +1,63 @@
+<div class="container">
+  <nav class="navbar">
+
+  </nav>
+  <div class="main-area">
+    <main class="content">
+      <app-map-companies *ngIf="view == 'map'"></app-map-companies>
+      <app-table-companies *ngIf="view == 'table'"></app-table-companies>
+    </main>
+    <aside class="control-sidebar">
+      <form [formGroup]="form" (submit)="save()" autocomplete="off">
+
+        <div class="switch-view">
+          <button class="btn-switch" (click)="changeView('map')"><i class="fa fa-map"></i></button>
+          <button class="btn-switch" (click)="changeView('table')"><i class="fa fa-table"></i></button>
+        </div>
+
+        <div class="form-group">
+          <label for="country">Pais</label>
+          <select class="form-control" name="country" id="country">
+            <option value="" disabled selected>Selecciona una opción</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="state">Estado</label>
+          <select class="form-control" name="state" id="state">
+            <option value="" disabled selected>Selecciona una opción</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input class="form-control" type="text" id="name" formControlName="name">
+        </div>
+
+        <div class="form-group">
+          <label for="address">Dirección</label>
+          <input class="form-control" type="text" id="address" formControlName="address">
+        </div>
+
+        <div class="row-coordinates">
+          <div class="form-group">
+            <label for="latitude">Lat</label>
+            <input class="form-control" type="text" id="latitude" formControlName="latitude">
+          </div>
+
+          <div class="form-group">
+            <label for="longitude">Lng</label>
+            <input class="form-control" type="text" id="longitude" formControlName="longitude">
+          </div>
+        </div>
+
+
+
+        <div class="form-group">
+          <button type="submit" class="btn">Guardar</button>
+        </div>
+
+      </form>
+    </aside>
+  </div>
+</div>

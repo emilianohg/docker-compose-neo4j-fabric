@@ -1,0 +1,53 @@
+.navbar {
+  height: var(--navbar-height);
+}
+.main-area {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height));
+  display: grid;
+  grid-template-columns: 1fr min-content;
+}
+.control-sidebar {
+
+}
+
+.form-group {
+  padding: 10px;
+}
+
+.form-control, .form-control:focus, .form-control:active {
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: solid 1px #5a5a5a;
+  padding: 5px;
+  outline: none;
+  background-color: #fff;
+  max-width: 100%;
+}
+
+.form-control:disabled {
+  background-color: #efefef;
+}
+
+select {
+  width: 100%;
+}
+
+.btn {
+  width: 100%;
+  font-size: 1.3rem;
+  padding: 5px;
+}
+
+.switch-view {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.btn-switch i {
+  font-size: 1.2rem;
+  padding: 10px;
+}
+

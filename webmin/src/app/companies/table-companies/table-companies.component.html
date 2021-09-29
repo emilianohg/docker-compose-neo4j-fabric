@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Pais</th>
+      <th>Estado</th>
+      <th>Compañia</th>
+      <th>Dirección</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let company of companies">
+      <td>{{ company.country }}</td>
+      <td>{{ company.state }}</td>
+      <td>{{ company.name }}</td>
+      <td>{{ company.address }}</td>
+      <td>
+        <button><i class="fa fa-"></i></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
