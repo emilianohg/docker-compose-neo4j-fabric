@@ -2,7 +2,10 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import companyRoutes from './routes/companyRoutes';
 import {database}  from './database/database'
-import { config as dotenvConfig }  from 'dotenv';
+import dotenv from 'dotenv';
+import statesRoutes from './routes/statesRoutes'
+
+dotenv.config();
 
 class Server {
 
@@ -13,7 +16,6 @@ class Server {
         this.config();
         this.routes();
         this.connectDB();
-        dotenvConfig();
     }
 
     config():void{
@@ -26,7 +28,8 @@ class Server {
     }
 
     routes():void{
-      this.app.use('/api/companies',companyRoutes);
+        this.app.use('/api/companies', companyRoutes);
+        this.app.use('/api/states', statesRoutes);
     }
 
     async connectDB():Promise<void>{

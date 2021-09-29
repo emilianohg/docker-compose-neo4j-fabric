@@ -1,0 +1,7 @@
+### Listar compañias
+GET http://localhost:8100/api/states
+Accept: application/json
+
+### Listar compañias de un pais
+GET http://localhost:8100/api/states?country=mx
+Accept: application/json

@@ -22,6 +22,26 @@ https://neo4j.com/docs/operations-manual/current/docker/ref-settings/
 
 ![Screenshoot de conección](docs/images/connection.png)
 
+Cargar estados de Canada
+
+```
+// Borramos todo
+MATCH (n)-[r]-() DELETE r;
+MATCH (n) DELETE n;
+
+Cargamos paises
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/emilianohg/docker-compose-neo4j-fabric/master/states.csv" AS row
+WITH row
+WHERE row.country = 'Canada'
+CREATE (s:State)
+SET
+s.stateID = toInteger(row.id),
+s.country = row.country,
+s.state = row.state;
+```
+
+
+
 Conectarse al servidor *fabric*
 
 ```

@@ -1,24 +1,63 @@
 import { Request, Response } from 'express';
 import { database } from '../database/database'
+import dotenv from 'dotenv';
 
 //endpoint
-class CompanyController {
+export class CompanyController {
+
+  isAdmin = false;
+
+  constructor() {
+    dotenv.config();
+    this.isAdmin = (process.env.IS_ADMIN || 'false') == 'true';
+  }
 
   public async list(req: any, res: Response) {
-
     try {
-      const companies = database.session.run(`MATCH (c:Company)return c`);
-      const nodes = (await companies).records;
+
+      const execution = database.session.run(`
+        MATCH (c:Company)-[PART_OF]-(s)
+        RETURN
+          c.companyID as id,
+          c.name as name,
+          c.address as address,
+          c.lat as lat,
+          c.lon as lng,
+          s as state
+      `);
+
+      const nodes = (await execution).records;
+
+      const companies = nodes.map(record => {
+        const state = record.get('state');
+
+        console.log(state.properties);
+        return {
+          id: record.get('id').low,
+          name: record.get('name'),
+          address: record.get('address'),
+          coordinate: {
+            latitude: record.get('lat'),
+            longitude: record.get('lng'),
+          },
+          state: {
+            id: state.properties.stateID.low,
+            name: state.properties.state,
+          }
+        };
+      });
       
       res.json({ 
-        ok:true,
-        data: nodes
+        ok: true,
+        data: companies
       })
+
     } catch (error) {
+
       res.status(500).json({
         ok:false,
         msg:error
-      })
+      });
 
     }
   }
@@ -26,18 +65,29 @@ class CompanyController {
   public async create(req: Request, res: Response) {
        const { body } = req;
 
+        const query = `
+          CALL {
+            MATCH (s:State)
+            WHERE s.stateID = ${body.stateid}
+            RETURN s
+          }
+          CREATE (c:Company{
+            companyID: apoc.create.uuid(),
+            name: "${body.name}",
+            address: "${body.address}",
+            lat: "${body.lat}",
+            lon: "${body.lon}"
+          })-[r:PART_OF]->(s)
+        `
 
-        
-        const query = `CALL { CREATE (c:Company{companyID:apoc.create.uuid(),name: "${body.name}", address: "${body.address}", lat: "${body.lat}", lon:${body.lon}}) RETURN c } CREATE (c)-[r:PART_OF]->(s:State{id:"${body.stateid}"})`
+    console.log(query);
 
         await database.session.run(query).then( _ => {
 
-          console.log(_);
-
-          res.status(200).json({ 
-            ok:true,
-            msg:"Empresa creada con exito."
-            })
+          res.status(200).json({
+            ok: true,
+            msg: "Empresa creada con exito."
+          })
         }).catch( err  => {
             res.status(500).json({
               ok:false,
@@ -110,4 +160,6 @@ class CompanyController {
 
   }
 }
+
+
 export const companyController = new CompanyController();

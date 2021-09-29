@@ -1,0 +1,16 @@
+### Listar compañias
+GET http://localhost:8100/api/companies
+Accept: application/json
+
+### Crear compañia Canada
+POST http://localhost:8100/api/companies
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Coppel",
+  "address": "Angel Flores #245 Pte. Col. Centro. Entre Rubi Y Morelos, Culiacán Rosales",
+  "lat": "24.8091278",
+  "lon": "-107.3972702",
+  "stateid": "1"
+}

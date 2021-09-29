@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Company } from '../../../domain/company';
+import { CompaniesApiService } from '../../../services/api/companies-api.service'
 
 @Component({
   selector: 'app-table-companies',
@@ -10,8 +11,11 @@ export class TableCompaniesComponent implements OnInit {
 
   companies: Company[];
 
-  constructor() {
+  constructor(
+    private api: CompaniesApiService,
+  ) {
     this.companies = [];
+    this.api.index().subscribe(companies => this.companies = companies.data);
   }
 
   ngOnInit(): void {

@@ -1,6 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators'
 
 @Injectable()
 export class StatesApiService {
@@ -9,12 +10,15 @@ export class StatesApiService {
 
   constructor(private http: HttpClient) {}
 
-  async index() {
-    const data = await this.http.get(this.baseUrl, {
+  index() {
+    return this.http.get(this.baseUrl, {
       params: {}
-    }).toPromise();
-
-    return data;
+    }).pipe(
+      map(data => {
+        console.log(data);
+        return data;
+      })
+    );
   }
 
 }

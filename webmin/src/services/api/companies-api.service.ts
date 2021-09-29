@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators'
 import { Observable } from 'rxjs'
+import { Company } from '../../domain/company'
 
 @Injectable()
 export class CompaniesApiService {
@@ -12,7 +13,7 @@ export class CompaniesApiService {
   constructor(private http: HttpClient) {}
 
   index() {
-    return this.http.get(this.baseUrl, {
+    return this.http.get<ApiResponse<Company[]>>(this.baseUrl, {
       params: {}
     }).pipe(
       map(data => {
