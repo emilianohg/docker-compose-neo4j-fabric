@@ -18,6 +18,7 @@ export class CompaniesComponent implements OnInit {
   submitted = false;
   form: FormGroup;
   states: State[];
+  countries: Country[];
 
   constructor(
     private fb: FormBuilder,
@@ -25,9 +26,11 @@ export class CompaniesComponent implements OnInit {
     private companiesUi: CompaniesUi,
     private apiCompanies: CompaniesApiService,
     private apiStates: StatesApiService,
+    private apiCountries: CountriesApiService,
   ) {
 
     this.states = [];
+    this.countries = [];
 
     this.form = this.fb.group({
       country: [null, [Validators.required]],
@@ -50,12 +53,17 @@ export class CompaniesComponent implements OnInit {
       .subscribeViewEvent()
       .subscribe(view => this.view = view);
 
-    this.apiCompanies.index().subscribe(res => {
-      console.log(res);
-    });
 
     this.apiStates.index().subscribe(states => this.states = states.data);
+    this.apiCountries.index().subscribe(countries => {
+      this.countries = countries;
 
+      if (this.countries.length === 1) {
+        const country = this.countries[0];
+        this.form.get('country')?.setValue(country.id);
+        this.form.get('country')?.disable();
+      }
+    });
   }
 
 
@@ -65,13 +73,10 @@ export class CompaniesComponent implements OnInit {
 
   save() {
 
-
-
     this.submitted = true;
     if(this.form.invalid){
       return;
     }
-
 
   }
 
@@ -82,3 +87,5 @@ export class CompaniesComponent implements OnInit {
 }
 
 import { StatesApiService } from '../../services/api/states-api.service'
+import { Country } from '../../domain/country'
+import { CountriesApiService } from '../../services/api/countries-api.service'

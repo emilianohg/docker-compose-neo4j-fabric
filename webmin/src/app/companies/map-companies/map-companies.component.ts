@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Loader, LoaderOptions } from 'google-maps';
 import { environment } from '../../../environments/environment'
 import { GoogleMapsService } from '../../../services/google-maps/google-maps.service'
+import { Company } from '../../../domain/company'
+import { CompaniesApiService } from '../../../services/api/companies-api.service'
 
 
 @Component({
@@ -12,11 +14,14 @@ import { GoogleMapsService } from '../../../services/google-maps/google-maps.ser
 export class MapCompaniesComponent implements OnInit {
 
   @ViewChild('gmapContainer', {static: false}) gmap: ElementRef;
+  private companies: Company[];
 
   constructor(
     private google: GoogleMapsService,
+    private api: CompaniesApiService,
   ) {
     this.gmap = new ElementRef<any>('div');
+    this.companies = [];
   }
 
   ngOnInit(): void {
@@ -24,13 +29,25 @@ export class MapCompaniesComponent implements OnInit {
   }
 
   async initMap() {
-
-
-
     const google = await this.google.load();
     const map = new google.maps.Map(this.gmap.nativeElement, {
-      center: {lat: 23.634501, lng: -102.552784},
-      zoom: 6,
+      center: environment.map.center,
+      zoom: environment.map.zoom,
+    });
+
+    this.api.index().subscribe(companies => {
+      this.companies = companies.data;
+      this.companies.map(c => {
+        new google.maps.Marker({
+          position: {
+            lat: Number(c.coordinate.latitude),
+            lng: Number(c.coordinate.longitude),
+          },
+          map,
+        });
+      });
+
+
     });
   }
 

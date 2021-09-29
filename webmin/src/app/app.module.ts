@@ -15,6 +15,7 @@ import { CompaniesUi } from '../services/ui/companies-ui'
 import { CompaniesApiService } from '../services/api/companies-api.service'
 import { StatesApiService } from '../services/api/states-api.service'
 import { GoogleMapsService } from '../services/google-maps/google-maps.service'
+import { CountriesApiService } from '../services/api/countries-api.service'
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { GoogleMapsService } from '../services/google-maps/google-maps.service'
     CompaniesUi,
     CompaniesApiService,
     StatesApiService,
+    CountriesApiService,
     GoogleMapsService,
   ],
   bootstrap: [AppComponent]
