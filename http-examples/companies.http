@@ -14,3 +14,20 @@ Accept: application/json
   "lon": "-107.3972702",
   "stateid": "1"
 }
+
+### Editar compañia
+PUT http://localhost:8100/api/companies/be76a38e-160e-46a7-a365-1a6d5524c767
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Coppel Editado",
+  "address": "Angel Flores #245 Pte. Col. Centro. Entre Rubi Y Morelos, Culiacán Rosales",
+  "lat": "24.8091278",
+  "lon": "-107.3972702"
+}
+
+### Eliminar compañia
+DELETE http://localhost:8100/api/companies/be76a38e-160e-46a7-a365-1a6d5524c767
+Content-Type: application/json
+Accept: application/json

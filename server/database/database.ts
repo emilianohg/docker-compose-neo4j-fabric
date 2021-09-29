@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 
 class Database {
     driver : typeof neo4j.Driver;
-    session: typeof neo4j.Session;
 
     constructor() {
 
@@ -15,10 +14,16 @@ class Database {
           neo4j.auth.basic(this.username, this.password),
         );
 
-        this.session = this.driver.session({
+    }
+
+    async execute(call: <T>(session: typeof neo4j.Session) => T | any) {
+        const session = this.driver.session({
             database: this.dbname,
             defaultAccessMode: neo4j.session.WRITE
         });
+        const response = await call(session);
+        await session.close();
+        return response;
     }
 
     async authenticate (){

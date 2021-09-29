@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { database } from '../database/database'
 import dotenv from 'dotenv';
+import neo4j from 'neo4j-driver';
 
 //endpoint
 export class CompanyController {
@@ -13,42 +14,28 @@ export class CompanyController {
   }
 
   public async list(req: any, res: Response) {
+
+    const query = `
+      MATCH (c:Company)-[PART_OF]-(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+    `;
+
     try {
 
-      const execution = database.session.run(`
-        MATCH (c:Company)-[PART_OF]-(s)
-        RETURN
-          c.companyID as id,
-          c.name as name,
-          c.address as address,
-          c.lat as lat,
-          c.lon as lng,
-          s as state
-      `);
+      const companies = await database.execute((async session => {
+        const execution = await session.run(query);
+        return execution.records.map(record => {
+          return CompanyParser.execute(record);
+        });
+      }));
 
-      const nodes = (await execution).records;
-
-      const companies = nodes.map(record => {
-        const state = record.get('state');
-
-        console.log(state.properties);
-        return {
-          id: record.get('id').low,
-          name: record.get('name'),
-          address: record.get('address'),
-          coordinate: {
-            latitude: record.get('lat'),
-            longitude: record.get('lng'),
-          },
-          state: {
-            id: state.properties.stateID.low,
-            name: state.properties.state,
-            country: state.properties.country,
-          }
-        };
-      });
-      
-      res.json({ 
+      res.json({
         ok: true,
         data: companies
       })
@@ -64,101 +51,155 @@ export class CompanyController {
   }
 
   public async create(req: Request, res: Response) {
-       const { body } = req;
+    const { body } = req;
 
-        const query = `
-          CALL {
-            MATCH (s:State)
-            WHERE s.stateID = ${body.stateid}
-            RETURN s
-          }
-          CREATE (c:Company{
-            companyID: apoc.create.uuid(),
-            name: "${body.name}",
-            address: "${body.address}",
-            lat: "${body.lat}",
-            lon: "${body.lon}"
-          })-[r:PART_OF]->(s)
-        `
+    const query = `
+      CALL {
+        MATCH (s:State)
+        WHERE s.stateID = ${body.stateid}
+        RETURN s
+      }
+      CREATE (c:Company{
+        companyID: apoc.create.uuid(),
+        name: "${body.name}",
+        address: "${body.address}",
+        lat: "${body.lat}",
+        lon: "${body.lon}"
+      })-[r:PART_OF]->(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+    `;
 
-    console.log(query);
+    try {
 
-        await database.session.run(query).then( _ => {
+      const company = await database.execute(async session => {
+        const execution = await session.run(query);
+        const record = execution.records[0];
+        return CompanyParser.execute(record);
+      });
 
-          res.status(200).json({
-            ok: true,
-            msg: "Empresa creada con exito."
-          })
-        }).catch( err  => {
-            res.status(500).json({
-              ok:false,
-              msg:err
-            })
-        })
+      res.status(200).json({
+        ok: true,
+        data: company,
+        msg: 'Empresa creada con exito.',
+      });
 
-
-
-
-
+    } catch(error) {
+      console.log(error);
+      res.status(500).json({
+        ok: false,
+        msg: error
+      });
+    }
   }
-
-  public async getOne(req: Request, res: Response) {
-
-  }
-
-
-
-
 
   public async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    const query = `MATCH (c:Company{companyID:"${id}"})-[r:PART_OF]->() DELETE c,r;`
+    const query = `
+      MATCH (c:Company)-[r:PART_OF]->(s)
+      WHERE c.companyID = "${id}"
+      DELETE c, r
+    `;
 
-    await database.session.run(query).then( _ => {
+    console.log(query);
 
-      console.log( _ );
+    try {
 
-      
-      res.status(200).json({ 
-        ok:true,
-        msg:"Empresa elimianda con exito."
-        })
-    }).catch( err  => {
-        res.status(500).json({
-          ok:false,
-          msg:err
-        })
-    })
+      await database.execute(async session => {
+        const execution = await session.run(query);
+      });
+
+      res.status(200).json({
+        ok: true,
+        data: true,
+        msg: 'Empresa elimianda con exito.',
+      });
+
+    } catch(error) {
+      console.log(error);
+      res.status(500).json({
+        ok: false,
+        msg: error
+      });
+    }
 
   }
 
   public async update(req: Request, res: Response) {
 
-    console.log("entre");
-
-
     const { id } = req.params;
     const { body } = req;
 
-    const query = `MATCH (c:Company) WHERE c.companyID = "${id}" SET c.address = "${body.address}", c.name = "${body.name}", c.lat="${body.lat}", c.lon = "${body.lon}" return c`
+    console.log(id);
 
-    await database.session.run(query).then( _ => {
+    const query = `
+      MATCH (c:Company)-[PART_OF]-(s)
+      WHERE c.companyID = "${id}"
+      SET 
+        c.address = "${body.address}",
+        c.name = "${body.name}",
+        c.lat="${body.lat}",
+        c.lon = "${body.lon}"
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+      `;
 
-      console.log(_);
+    try {
 
-      res.status(200).json({ 
-        ok:true,
-        msg:"Empresa actualiza con exito."
-        })
-    }).catch( err  => {
-        res.status(500).json({
-          ok:false,
-          msg:err
-        })
-    })
+      const company = await database.execute(async session => {
+        const execution = await session.run(query);
+        const record = execution.records;
+
+        return CompanyParser.execute(record[0]);
+      });
+
+      res.status(200).json({
+        ok: true,
+        data: company,
+        msg: 'Empresa actualizada con exito.',
+      });
+
+    } catch(error) {
+      console.log(error);
+      res.status(500).json({
+        ok: false,
+        msg: error
+      });
+    }
 
 
+  }
+
+}
+
+class CompanyParser {
+  public static execute(record : typeof neo4j.Record): any {
+    const state = record.get('state');
+    return {
+      id: record.get('id'),
+      name: record.get('name'),
+      address: record.get('address'),
+      coordinate: {
+        latitude: record.get('lat'),
+        longitude: record.get('lng'),
+      },
+      state: {
+        id: state.properties.stateID.low,
+        name: state.properties.state,
+        country: state.properties.country,
+      }
+    }
   }
 }
 
