@@ -107,8 +107,6 @@ export class CompanyController {
       DELETE c, r
     `;
 
-    console.log(query);
-
     try {
 
       await database.execute(async session => {
