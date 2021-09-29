@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import companyRoutes from './routes/companyRoutes';
 import {database}  from './database/database'
+import { config as dotenvConfig }  from 'dotenv';
 
 class Server {
 
@@ -12,6 +13,7 @@ class Server {
         this.config();
         this.routes();
         this.connectDB();
+        dotenvConfig();
     }
 
     config():void{
@@ -32,7 +34,7 @@ class Server {
     }
     start():void{
       this.app.listen(this.app.get('port'), () => {
-          console.log('Server on port',this.app.get('port'))
+              console.log('Server on port',this.app.get('port'))
       });
     }
     

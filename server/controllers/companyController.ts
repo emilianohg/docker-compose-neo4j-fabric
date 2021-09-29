@@ -11,8 +11,8 @@ class CompanyController {
       const nodes = (await companies).records;
       
       res.json({ 
-      ok:true,
-      data: nodes 
+        ok:true,
+        data: nodes
       })
     } catch (error) {
       res.status(500).json({
