@@ -29,10 +29,10 @@ Cargar estados de Canada
 MATCH (n)-[r]-() DELETE r;
 MATCH (n) DELETE n;
 
-Cargamos paises
+// Cargamos estados
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/emilianohg/docker-compose-neo4j-fabric/master/states.csv" AS row
 WITH row
-WHERE row.country = 'Canada'
+WHERE row.country = 'canada'
 CREATE (s:State)
 SET
 s.stateID = toInteger(row.id),
