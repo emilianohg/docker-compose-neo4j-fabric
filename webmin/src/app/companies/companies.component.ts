@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 import { CompaniesUi, viewCompany } from '../../services/ui/companies-ui'
+import { CompaniesApiService } from '../../services/api/companies-api.service'
 
 @Component({
   selector: 'app-companies',
@@ -20,7 +21,8 @@ export class CompaniesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private geocoding: GeocodingService,
-    private companiesUi: CompaniesUi
+    private companiesUi: CompaniesUi,
+    private apiCompanies: CompaniesApiService,
   ) {
     this.form = this.fb.group({
       country: [null, [Validators.required]],
@@ -45,9 +47,15 @@ export class CompaniesComponent implements OnInit {
     this.companiesUi
       .subscribeView()
       .subscribe(view => this.view = view);
+
+    this.apiCompanies.index().subscribe(res => {
+      console.log(res);
+    });
   }
 
   save() {
+
+
 
     this.submitted = true;
     if(this.form.invalid){

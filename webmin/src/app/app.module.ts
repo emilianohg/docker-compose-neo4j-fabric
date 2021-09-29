@@ -12,6 +12,7 @@ import { TableCompaniesComponent } from './companies/table-companies/table-compa
 
 import { GeocodingService } from '../services/google-maps/geocoding.service';
 import { CompaniesUi } from '../services/ui/companies-ui'
+import { CompaniesApiService } from '../services/api/companies-api.service'
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { CompaniesUi } from '../services/ui/companies-ui'
   providers: [
     GeocodingService,
     CompaniesUi,
+    CompaniesApiService,
   ],
   bootstrap: [AppComponent]
 })
