@@ -1,8 +1,9 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import companyRoutes from './routes/companyRoutes';
-import {database}  from './database/database'
 import dotenv from 'dotenv';
+
+import { database }  from './database/database'
+import companyRoutes from './routes/companyRoutes';
 import statesRoutes from './routes/statesRoutes'
 
 dotenv.config();
@@ -28,8 +29,8 @@ class Server {
     }
 
     routes():void{
-        this.app.use('/api/companies', companyRoutes);
         this.app.use('/api/states', statesRoutes);
+        this.app.use('/api/companies', companyRoutes);
     }
 
     async connectDB():Promise<void>{

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { database } from '../database/database'
 
 //endpoint
@@ -12,7 +12,8 @@ class StatesController {
         MATCH (s:State) 
         RETURN 
           s.stateID as id,
-          s.state as name
+          s.state as name,
+          s.country as country
       `;
 
       const states = database.session.run(query);
@@ -20,14 +21,18 @@ class StatesController {
         return {
           id: record.get('id').low,
           name: record.get('name'),
+          country: record.get('country'),
         };
       });
+
+      console.log(nodes);
 
       res.json({
         ok: true,
         data: nodes
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         ok: false,
         msg: error

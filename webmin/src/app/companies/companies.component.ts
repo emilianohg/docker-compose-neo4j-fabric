@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 import { CompaniesUi, viewCompany } from '../../services/ui/companies-ui'
 import { CompaniesApiService } from '../../services/api/companies-api.service'
-
+import { State } from '../../domain/state';
 @Component({
   selector: 'app-companies',
   templateUrl: './companies.component.html',
@@ -15,15 +15,20 @@ export class CompaniesComponent implements OnInit {
 
   view: 'map' | 'table' = 'map';
 
+  submitted = false;
   form: FormGroup;
-  private submitted = false;
+  states: State[];
 
   constructor(
     private fb: FormBuilder,
     private geocoding: GeocodingService,
     private companiesUi: CompaniesUi,
     private apiCompanies: CompaniesApiService,
+    private apiStates: StatesApiService,
   ) {
+
+    this.states = [];
+
     this.form = this.fb.group({
       country: [null, [Validators.required]],
       state: [null, [Validators.required]],
@@ -41,9 +46,6 @@ export class CompaniesComponent implements OnInit {
       console.log(data);
     });
 
-  }
-
-  ngOnInit(): void {
     this.companiesUi
       .subscribeView()
       .subscribe(view => this.view = view);
@@ -51,6 +53,14 @@ export class CompaniesComponent implements OnInit {
     this.apiCompanies.index().subscribe(res => {
       console.log(res);
     });
+
+    this.apiStates.index().subscribe(states => this.states = states.data);
+
+  }
+
+
+  ngOnInit(): void {
+
   }
 
   save() {
@@ -70,3 +80,5 @@ export class CompaniesComponent implements OnInit {
   }
 
 }
+
+import { StatesApiService } from '../../services/api/states-api.service'

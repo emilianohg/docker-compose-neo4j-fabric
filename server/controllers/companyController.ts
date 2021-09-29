@@ -43,6 +43,7 @@ export class CompanyController {
           state: {
             id: state.properties.stateID.low,
             name: state.properties.state,
+            country: state.properties.country,
           }
         };
       });

@@ -26,6 +26,7 @@
           <label for="state">Estado</label>
           <select class="form-control" name="state" id="state">
             <option value="" disabled selected>Selecciona una opción</option>
+            <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
           </select>
         </div>
 

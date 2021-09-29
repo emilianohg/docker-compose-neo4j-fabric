@@ -9,6 +9,7 @@ class Database {
 
         dotenv.config();
 
+        // cambiar a bolt
         this.driver  = neo4j.driver(
           `neo4j://${this.host}:${this.port}`,
           neo4j.auth.basic(this.username, this.password),
