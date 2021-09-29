@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Company } from '../../../domain/company';
-import { CompaniesApiService } from '../../../services/api/companies-api.service'
+import { CompaniesApiService } from '../../../services/api/companies-api.service';
+import { CompaniesUi } from '../../../services/ui/companies-ui';
 
 @Component({
   selector: 'app-table-companies',
@@ -13,12 +14,22 @@ export class TableCompaniesComponent implements OnInit {
 
   constructor(
     private api: CompaniesApiService,
+    private ui: CompaniesUi,
   ) {
     this.companies = [];
-    this.api.index().subscribe(companies => this.companies = companies.data);
+    this.getCompanies();
   }
 
   ngOnInit(): void {
+    this.ui.reloadCompaniesEvent().subscribe(_ => this.getCompanies());
+  }
+
+  delete(company: Company) {
+    this.api.delete(company.id).subscribe(_ => this.ui.reloadCompanies());
+  }
+
+  getCompanies() {
+    this.api.index().subscribe(companies => this.companies = companies.data);
   }
 
 }

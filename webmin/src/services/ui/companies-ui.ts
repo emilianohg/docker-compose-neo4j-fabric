@@ -7,7 +7,8 @@ export type viewCompany = 'map' | 'table';
 @Injectable()
 export class CompaniesUi {
 
-  subject = new Subject<viewCompany>();
+  currentView = new Subject<viewCompany>();
+  companiesReloaded = new Subject<boolean>();
 
   private companies: Company[];
 
@@ -18,11 +19,19 @@ export class CompaniesUi {
   }
 
   public changeView(view: viewCompany): void {
-    this.subject.next(view);
+    this.currentView.next(view);
   }
 
-  public subscribeView(): Observable<viewCompany> {
-    return this.subject.asObservable();
+  public subscribeViewEvent(): Observable<viewCompany> {
+    return this.currentView.asObservable();
+  }
+
+  public reloadCompanies() {
+    this.companiesReloaded.next(true);
+  }
+
+  public reloadCompaniesEvent(): Observable<boolean> {
+    return this.companiesReloaded.asObservable();
   }
 
 /*

@@ -14,6 +14,7 @@ import { GeocodingService } from '../services/google-maps/geocoding.service';
 import { CompaniesUi } from '../services/ui/companies-ui'
 import { CompaniesApiService } from '../services/api/companies-api.service'
 import { StatesApiService } from '../services/api/states-api.service'
+import { GoogleMapsService } from '../services/google-maps/google-maps.service'
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { StatesApiService } from '../services/api/states-api.service'
     CompaniesUi,
     CompaniesApiService,
     StatesApiService,
+    GoogleMapsService,
   ],
   bootstrap: [AppComponent]
 })

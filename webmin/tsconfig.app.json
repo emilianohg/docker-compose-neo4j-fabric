@@ -8,7 +8,7 @@
   "files": [
     "src/main.ts",
     "src/polyfills.ts",
-    "src/services/api/ApiResponse.ts"
+    "src/services/api/api-response.ts"
   ],
   "include": [
     "src/**/*.d.ts"

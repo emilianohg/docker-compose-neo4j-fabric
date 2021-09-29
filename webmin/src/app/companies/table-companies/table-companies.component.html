@@ -15,7 +15,8 @@
       <td>{{ company.name }}</td>
       <td>{{ company.address }}</td>
       <td>
-        <button><i class="fa fa-"></i></button>
+        <button class="btn btn-danger" (click)="delete(company)"><i class="fa fa-trash"></i></button>
+        <button class="btn"><i class="fa fa-pencil-alt"></i></button>
       </td>
     </tr>
   </tbody>

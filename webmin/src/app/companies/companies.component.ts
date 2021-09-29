@@ -47,7 +47,7 @@ export class CompaniesComponent implements OnInit {
     });
 
     this.companiesUi
-      .subscribeView()
+      .subscribeViewEvent()
       .subscribe(view => this.view = view);
 
     this.apiCompanies.index().subscribe(res => {
