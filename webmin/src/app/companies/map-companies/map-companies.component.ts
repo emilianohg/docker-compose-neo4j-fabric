@@ -41,12 +41,15 @@ export class MapCompaniesComponent implements OnInit {
     this.api.index().subscribe(companies => {
       this.companies = companies.data;
       this.companies.map(c => {
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           position: {
             lat: Number(c.coordinate.latitude),
             lng: Number(c.coordinate.longitude),
           },
           map,
+        });
+        marker.addListener('click', () => {
+          this.ui.changeMode(c);
         });
       });
     });

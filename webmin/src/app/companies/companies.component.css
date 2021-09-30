@@ -1,5 +1,8 @@
 .navbar {
   height: var(--navbar-height);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 .main-area {
   width: 100%;
@@ -10,9 +13,15 @@
 .control-sidebar {
 
 }
-
+.mt-1 {
+  margin-top: 1rem;
+}
 .form-group {
   padding: 10px;
+}
+
+.form-group label {
+  font-weight: bold;
 }
 
 .form-control, .form-control:focus, .form-control:active {

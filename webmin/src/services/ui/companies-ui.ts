@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs'
 
 export type viewCompany = 'map' | 'table';
+export type modeCompany = 'edit' | 'create';
 
 @Injectable()
 export class CompaniesUi {
 
   currentView = new Subject<viewCompany>();
   companiesReloaded = new Subject<boolean>();
+  editMode = new Subject<Company | null>();
 
   private companies: Company[];
-
-  private view: viewCompany = 'map';
 
   constructor() {
     this.companies = [];
@@ -32,6 +32,14 @@ export class CompaniesUi {
 
   public reloadCompaniesEvent(): Observable<boolean> {
     return this.companiesReloaded.asObservable();
+  }
+
+  public changeMode(company: Company | null) {
+    return this.editMode.next(company);
+  }
+
+  public changeModeEvent(): Observable<Company | null> {
+    return this.editMode.asObservable();
   }
 
 /*

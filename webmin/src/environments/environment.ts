@@ -3,13 +3,13 @@ export const environment = {
   google_map_key: "AIzaSyAHhNFWarPHerk033KxZB08n2c-fKJGQmY",
   url_api: 'http://localhost:8100',
   map: {
-    center: {lat: 60.7215927, lng: -97.7868248},
-    zoom: 4.5,
+    center: {lat: 23.634501, lng: -102.552784},
+    zoom: 6,
   },
   countries: [
     {
-      id: 'canada',
-      name: 'Canada',
+      id: 'mexico',
+      name: 'México',
     },
   ],
 };

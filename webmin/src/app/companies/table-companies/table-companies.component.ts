@@ -25,7 +25,11 @@ export class TableCompaniesComponent implements OnInit {
   }
 
   delete(company: Company) {
-    this.api.delete(company.id).subscribe(_ => this.ui.reloadCompanies());
+    this.api.delete(company).subscribe(_ => this.ui.reloadCompanies());
+  }
+
+  edit(company: Company) {
+    this.ui.editMode.next(company);
   }
 
   getCompanies() {

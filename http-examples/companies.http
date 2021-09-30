@@ -8,11 +8,12 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Coppel",
+  "name": "Clemente Company",
   "address": "Angel Flores #245 Pte. Col. Centro. Entre Rubi Y Morelos, Culiacán Rosales",
-  "lat": "24.8091278",
-  "lon": "-107.3972702",
-  "stateid": "1"
+  "lat": "24.8021278",
+  "lon": "-107.4972702",
+  "stateid": "88",
+  "country": "mexico"
 }
 
 ### Editar compañia
@@ -31,3 +32,43 @@ Accept: application/json
 DELETE http://localhost:8100/api/companies/be76a38e-160e-46a7-a365-1a6d5524c767
 Content-Type: application/json
 Accept: application/json
+
+### Eliminar compañia
+DELETE http://localhost:8100/api/companies/7b335996-d1bd-40a2-9574-9050e020442b
+Content-Type: application/json
+Accept: application/json
+
+{
+"countryid": "canada"
+}
+
+### Crear compañia fabric
+POST http://localhost:8100/api/companies
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Clemente Company",
+  "address": "Angel Flores #245 Pte. Col. Centro. Entre Rubi Y Morelos, Culiacán Rosales",
+  "lat": "24.8021278",
+  "lon": "-107.4972702",
+  "stateid": "88",
+  "countryid": "mexico"
+}
+
+
+### Editar compañia
+PUT http://localhost:8100/api/companies/0fbcbadd-e93c-4245-8451-a963e909c38b
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Cerote 2",
+  "address": "Angel Flores #245 Pte. Col. Centro. Entre Rubi Y Morelos, Culiacán Rosales",
+  "lat": "24.81474",
+  "lon": "-107.43227",
+  "countryid": "canada",
+  "stateid": 6
+}
+
+

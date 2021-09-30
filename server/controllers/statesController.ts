@@ -8,8 +8,6 @@ class StatesController {
 
     const { country } = req.query;
 
-    console.log(country);
-
     try {
 
       const states = await database.execute(async session => {
@@ -24,6 +22,7 @@ class StatesController {
 
         if (country !== undefined) {
           query = `
+            USE administrator.${country}
             MATCH (s:State) 
             WHERE s.country = "${country}"
             RETURN 

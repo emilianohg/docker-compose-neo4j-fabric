@@ -174,7 +174,7 @@ UNION
 
   public async delete(req: Request, res: Response) {
     const { id }        = req.params;
-    const { countryid } = req.body;
+    const { countryid } = req.query;
 
     let query = "";
 

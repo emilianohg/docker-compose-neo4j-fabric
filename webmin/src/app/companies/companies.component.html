@@ -1,6 +1,8 @@
 <div class="container">
   <nav class="navbar">
-
+    <img src="assets/canada.png" alt="canada" *ngIf="hasCanada">
+    <img src="assets/united-states.png" alt="usa" *ngIf="hasUSA">
+    <img src="assets/mexico.png" alt="mexico" *ngIf="hasMexico">
   </nav>
   <div class="main-area">
     <main class="content">
@@ -10,10 +12,12 @@
     <aside class="control-sidebar">
       <form [formGroup]="form" (submit)="save()" autocomplete="off">
 
+        <!--
         <div class="switch-view">
           <button class="btn-switch" (click)="changeView('map')"><i class="fa fa-map"></i></button>
           <button class="btn-switch" (click)="changeView('table')"><i class="fa fa-table"></i></button>
         </div>
+        -->
 
         <div class="form-group">
           <label for="country">Pais</label>
@@ -60,7 +64,11 @@
 
 
         <div class="form-group">
-          <button type="submit" class="btn">Guardar</button>
+          <button type="submit" class="btn" *ngIf="mode == 'create'">Crear</button>
+          <button type="submit" class="btn" *ngIf="mode == 'edit'">Editar</button>
+          <button type="button" class="btn mt-1" *ngIf="mode == 'edit'" (click)="delete()">Eliminar</button>
+
+          <button type="button" class="btn mt-1" *ngIf="mode == 'edit'" (click)="cancelEditing()">Cancelar</button>
         </div>
 
       </form>
