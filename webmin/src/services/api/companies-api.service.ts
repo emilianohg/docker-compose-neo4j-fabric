@@ -1,7 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators'
+import { map, tap } from 'rxjs/operators'
 import { Company } from '../../domain/company'
 
 @Injectable()
@@ -14,11 +14,7 @@ export class CompaniesApiService {
   index() {
     return this.http.get<ApiResponse<Company[]>>(this.baseUrl, {
       params: {}
-    }).pipe( // todo: remover si no se ocupa
-      map(data => {
-        return data;
-      })
-    );
+    });
   }
 
   delete(company: Company) {

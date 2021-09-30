@@ -43,6 +43,7 @@ export class MapCompaniesComponent implements OnInit {
     });
 
     this.api.index().subscribe(companies => {
+
       this.companies = companies.data;
       this.companies.map(c => {
         const marker = new google.maps.Marker({
@@ -78,6 +79,8 @@ export class MapCompaniesComponent implements OnInit {
         });
 
       });
+    }, error => {
+      alert('No se pudo realizar la consulta. Revise el status de los nodos.');
     });
   }
 
