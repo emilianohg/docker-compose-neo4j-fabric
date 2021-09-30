@@ -6,16 +6,23 @@ import neo4j from 'neo4j-driver';
 //endpoint
 export class CompanyController {
 
-  isAdmin = false;
 
   constructor() {
     dotenv.config();
-    this.isAdmin = (process.env.IS_ADMIN || 'false') == 'true';
+  }
+
+  public static isAdmin(){
+    return  (process.env.IS_ADMIN || 'false') == 'true';
   }
 
   public async list(req: any, res: Response) {
+    let query = "";
 
-    const query = `
+    console.log(CompanyController.isAdmin());
+
+
+    if(!CompanyController.isAdmin()){
+    query = `
       MATCH (c:Company)-[PART_OF]-(s)
       RETURN
         c.companyID as id,
@@ -25,12 +32,48 @@ export class CompanyController {
         c.lon as lng,
         s as state
     `;
+    }else{
+      query = `
+      USE administrator.canada
+      MATCH (c:Company)-[PART_OF]-(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+UNION 
+  USE administrator.mexico
+      MATCH (c:Company)-[PART_OF]-(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+        UNION
+          USE administrator.usa
+      MATCH (c:Company)-[PART_OF]-(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+      `
+    }
+
 
     try {
 
       const companies = await database.execute((async session => {
         const execution = await session.run(query);
         return execution.records.map(record => {
+      console.log('eye1');
+
           return CompanyParser.execute(record);
         });
       }));
@@ -41,6 +84,7 @@ export class CompanyController {
       })
 
     } catch (error) {
+    
 
       res.status(500).json({
         ok:false,
@@ -53,7 +97,12 @@ export class CompanyController {
   public async create(req: Request, res: Response) {
     const { body } = req;
 
-    const query = `
+    let query = "";
+
+    console.log(CompanyController.isAdmin());
+
+    if(!CompanyController.isAdmin()){
+    query = `
       CALL {
         MATCH (s:State)
         WHERE s.stateID = ${body.stateid}
@@ -74,6 +123,34 @@ export class CompanyController {
         c.lon as lng,
         s as state
     `;
+
+    }else{
+
+      query = `
+      USE administrator.${body.countryid}
+      CALL {
+        MATCH (s:State)
+        WHERE s.stateID = ${body.stateid}
+        RETURN s
+      }
+      CREATE (c:Company{
+        companyID: apoc.create.uuid(),
+        name: "${body.name}",
+        address: "${body.address}",
+        lat: "${body.lat}",
+        lon: "${body.lon}"
+      })-[r:PART_OF]->(s)
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+      `
+
+    }
+    
 
     try {
 
@@ -99,13 +176,26 @@ export class CompanyController {
   }
 
   public async delete(req: Request, res: Response) {
-    const { id } = req.params;
+    const { id }        = req.params;
+    const { countryid } = req.body;
 
-    const query = `
+    let query = "";
+
+    if(!CompanyController.isAdmin()){
+    query = `
       MATCH (c:Company)-[r:PART_OF]->(s)
       WHERE c.companyID = "${id}"
       DELETE c, r
     `;
+    }else{
+      query = `
+      USE administrator.${countryid}
+      MATCH (c:Company)-[r:PART_OF]->(s)
+      WHERE c.companyID = "${id}"
+      DELETE c, r
+      `
+    }
+
 
     try {
 
@@ -134,9 +224,11 @@ export class CompanyController {
     const { id } = req.params;
     const { body } = req;
 
-    console.log(id);
+    let query = "";
 
-    const query = `
+    
+    if(!CompanyController.isAdmin()){
+    query = `
       MATCH (c:Company)-[PART_OF]-(s)
       WHERE c.companyID = "${id}"
       SET 
@@ -152,12 +244,35 @@ export class CompanyController {
         c.lon as lng,
         s as state
       `;
+    }else{
+
+      query = `
+      USE administrator.${body.countryid}
+      MATCH (c:Company)-[PART_OF]-(s)
+      WHERE c.companyID = "${id}"
+      SET 
+        c.address = "${body.address}",
+        c.name = "${body.name}",
+        c.lat="${body.lat}",
+        c.lon = "${body.lon}"
+      RETURN
+        c.companyID as id,
+        c.name as name,
+        c.address as address,
+        c.lat as lat,
+        c.lon as lng,
+        s as state
+      `
+
+    }
+
 
     try {
 
       const company = await database.execute(async session => {
         const execution = await session.run(query);
         const record = execution.records;
+
 
         return CompanyParser.execute(record[0]);
       });
@@ -183,7 +298,13 @@ export class CompanyController {
 
 class CompanyParser {
   public static execute(record : typeof neo4j.Record): any {
+    
+    console.log(record);
+
+    
     const state = record.get('state');
+
+
     return {
       id: record.get('id'),
       name: record.get('name'),

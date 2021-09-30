@@ -20,7 +20,7 @@ class Server {
     }
 
     config():void{
-        this.app.set('port',process.env.PORT || 8100);
+        this.app.set('port',process.env.PORT || 8200);
       
         this.app.use(cors());
         this.app.use(express.json());
