@@ -1,1 +1,14 @@
+<div *ngIf="companyHovered != null" class="card-info">
+  <div class="info-title">
+    <div class="flag">
+      <img src="assets/mexico.png" alt="mexico" *ngIf="companyHovered.state.country == 'mexico'">
+      <img src="assets/united-states.png" alt="usa" *ngIf="companyHovered.state.country == 'usa'">
+      <img src="assets/canada.png" alt="canada" *ngIf="companyHovered.state.country == 'canada'">
+    </div>
+    <div class="title">
+      <h1>{{ companyHovered.name }}</h1>
+    </div>
+  </div>
+  <p>{{ companyHovered.address }}</p>
+</div>
 <div #gmapContainer class="map"></div>

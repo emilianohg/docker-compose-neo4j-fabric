@@ -243,7 +243,6 @@ export class CompaniesComponent implements OnInit {
   }
 
   get hasUSA() {
-    const country = environment.countries.find(c => c.id == 'usa');
-    return country !== undefined;
+    return environment.countries.filter(c => c.id == 'usa').length > 0;
   }
 }

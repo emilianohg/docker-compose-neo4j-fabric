@@ -16,6 +16,8 @@ export class MapCompaniesComponent implements OnInit {
 
   @ViewChild('gmapContainer', {static: false}) gmap: ElementRef;
   private companies: Company[];
+  companyHovered: Company | null;
+  isFixed = false;
 
   constructor(
     private google: GoogleMapsService,
@@ -24,6 +26,7 @@ export class MapCompaniesComponent implements OnInit {
   ) {
     this.gmap = new ElementRef<any>('div');
     this.companies = [];
+    this.companyHovered = null;
   }
 
   ngOnInit(): void {
@@ -36,6 +39,7 @@ export class MapCompaniesComponent implements OnInit {
     const map = new google.maps.Map(this.gmap.nativeElement, {
       center: environment.map.center,
       zoom: environment.map.zoom,
+      disableDefaultUI: true,
     });
 
     this.api.index().subscribe(companies => {
@@ -48,13 +52,45 @@ export class MapCompaniesComponent implements OnInit {
           },
           map,
         });
+
+        map.addListener('click', () => {
+          this.isFixed = false;
+          this.companyHovered = null;
+          this.ui.changeMode(null);
+        });
+
         marker.addListener('click', () => {
           this.ui.changeMode(c);
+          this.isFixed = true;
+          this.companyHovered = c;
         });
+
+        marker.addListener("mouseover", () => {
+          if (!this.isFixed && this.companyHovered == null) {
+            this.companyHovered = c;
+          }
+        });
+
+        marker.addListener("mouseout", () => {
+          if (!this.isFixed) {
+            this.companyHovered = null;
+          }
+        });
+
       });
     });
   }
 
+  get hasMexico() {
+    return environment.countries.filter(c => c.id == 'mexico').length > 0;
+  }
 
+  get hasCanada() {
+    return environment.countries.filter(c => c.id == 'canada').length > 0;
+  }
+
+  get hasUSA() {
+    return environment.countries.filter(c => c.id == 'usa').length > 0;
+  }
 
 }

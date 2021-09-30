@@ -1,15 +1,17 @@
 <div class="container">
-  <nav class="navbar">
-    <img src="assets/canada.png" alt="canada" *ngIf="hasCanada">
-    <img src="assets/united-states.png" alt="usa" *ngIf="hasUSA">
-    <img src="assets/mexico.png" alt="mexico" *ngIf="hasMexico">
-  </nav>
   <div class="main-area">
     <main class="content">
       <app-map-companies *ngIf="view == 'map'"></app-map-companies>
       <app-table-companies *ngIf="view == 'table'"></app-table-companies>
     </main>
     <aside class="control-sidebar">
+
+      <nav class="navbar">
+        <img src="assets/canada.png" alt="canada" *ngIf="hasCanada">
+        <img src="assets/united-states.png" alt="usa" *ngIf="hasUSA">
+        <img src="assets/mexico.png" alt="mexico" *ngIf="hasMexico">
+      </nav>
+
       <form [formGroup]="form" (submit)="save()" autocomplete="off">
 
         <!--
