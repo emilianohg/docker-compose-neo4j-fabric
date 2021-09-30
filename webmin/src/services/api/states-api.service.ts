@@ -10,8 +10,16 @@ export class StatesApiService {
 
   constructor(private http: HttpClient) {}
 
-  index() {
-    return this.http.get<ApiResponse<State[]>>(this.baseUrl);
+  index(country?: string) {
+    const params : { country?: string } = {};
+
+    if (country !== undefined) {
+      params['country'] = country;
+    }
+
+    return this.http.get<ApiResponse<State[]>>(this.baseUrl, {
+      params: params
+    });
   }
 
 }

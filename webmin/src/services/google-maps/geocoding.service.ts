@@ -9,7 +9,7 @@ export class GeocodingService {
 
   constructor(private http: HttpClient) {}
 
-  async search(address: string) {
+  async search(address: string): Promise<any> {
     const data = await this.http.get(this.baseUrl, {
       params: {
         address: address,

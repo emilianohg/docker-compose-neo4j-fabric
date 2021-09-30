@@ -18,20 +18,17 @@ export class CompanyController {
   public async list(req: any, res: Response) {
     let query = "";
 
-    console.log(CompanyController.isAdmin());
-
-
-    if(!CompanyController.isAdmin()){
-    query = `
-      MATCH (c:Company)-[PART_OF]-(s)
-      RETURN
-        c.companyID as id,
-        c.name as name,
-        c.address as address,
-        c.lat as lat,
-        c.lon as lng,
-        s as state
-    `;
+    if(!CompanyController.isAdmin()) {
+      query = `
+        MATCH (c:Company)-[PART_OF]-(s)
+        RETURN
+          c.companyID as id,
+          c.name as name,
+          c.address as address,
+          c.lat as lat,
+          c.lon as lng,
+          s as state
+      `;
     }else{
       query = `
       USE administrator.canada

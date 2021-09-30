@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment'
 import { GoogleMapsService } from '../../../services/google-maps/google-maps.service'
 import { Company } from '../../../domain/company'
 import { CompaniesApiService } from '../../../services/api/companies-api.service'
+import { CompaniesUi } from '../../../services/ui/companies-ui'
 
 
 @Component({
@@ -19,6 +20,7 @@ export class MapCompaniesComponent implements OnInit {
   constructor(
     private google: GoogleMapsService,
     private api: CompaniesApiService,
+    private ui: CompaniesUi
   ) {
     this.gmap = new ElementRef<any>('div');
     this.companies = [];
@@ -26,6 +28,7 @@ export class MapCompaniesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initMap();
+    this.ui.reloadCompaniesEvent().subscribe(_ => this.initMap());
   }
 
   async initMap() {
@@ -46,9 +49,9 @@ export class MapCompaniesComponent implements OnInit {
           map,
         });
       });
-
-
     });
   }
+
+
 
 }

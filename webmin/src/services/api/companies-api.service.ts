@@ -25,4 +25,9 @@ export class CompaniesApiService {
     return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/${id}`);
   }
 
+  save(data: any) {
+    console.log(data);
+    return this.http.post<ApiResponse<Company[]>>(this.baseUrl, data);
+  }
+
 }

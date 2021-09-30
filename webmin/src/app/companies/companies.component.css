@@ -51,3 +51,13 @@ select {
   padding: 10px;
 }
 
+.address-google {
+  height: 40px;
+  max-height: 40px;
+  font-size: 0.8em;
+  margin: 5px 12px;
+  color: #5d5d5d;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
