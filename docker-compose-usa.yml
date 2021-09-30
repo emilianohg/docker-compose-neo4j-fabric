@@ -32,5 +32,5 @@ services:
       <<:  *common
       NEO4J_dbms_connector_http_listen__address: ":17476"
       NEO4J_dbms_connector_bolt_listen__address: ":17689"
-      NEO4J_dbms_connector_bolt_advertised__address: usa:17689
+      NEO4J_dbms_connector_bolt_advertised__address: 0.0.0.0:17689
       NEO4J_dbms_default__database: dbusa

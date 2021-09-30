@@ -32,5 +32,5 @@ services:
       <<: *common
       NEO4J_dbms_connector_http_listen__address: ":17474"
       NEO4J_dbms_connector_bolt_listen__address: ":17687"
-      NEO4J_dbms_connector_bolt_advertised__address: canada:17687
+      NEO4J_dbms_connector_bolt_advertised__address: 0.0.0.0:17687
       NEO4J_dbms_default__database: dbcanada
